@@ -3,6 +3,8 @@
 .env
 .env.local
 .env.*.local
+.envrc
+.env.claude
 
 # ── Session artifacts ────────────────────────────────────────────────
 # Sessions contain API output and should not be committed.

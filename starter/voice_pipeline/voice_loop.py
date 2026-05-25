@@ -85,7 +85,7 @@ async def run_voice_mode(session: Session, persona: ManagerPersona, max_turns: i
 
     # ── preflight: keys + deps ─────────────────────────────────────
     speechmatics_key = os.environ.get("SPEECHMATICS_KEY", "").strip()
-    rime_key = os.environ.get("RIME_API_KEY", "").strip()
+    elevenlabs_key = os.environ.get("ELEVENLABS_API_KEY", "").strip()
 
     if not speechmatics_key:
         print(
@@ -116,11 +116,11 @@ async def run_voice_mode(session: Session, persona: ManagerPersona, max_turns: i
         await run_text_mode(session, persona, max_turns=max_turns)
         return
 
-    # Rime is optional — we fall through to text-reply-only if missing
-    rime_enabled = bool(rime_key)
-    if not rime_enabled:
+    # ElevenLabs is optional — fall through to text-reply-only if missing
+    elevenlabs_enabled = bool(elevenlabs_key)
+    if not elevenlabs_enabled:
         print(
-            "ℹ  RIME_API_KEY not set — manager replies will be printed, not spoken.",
+            "ℹ  ELEVENLABS_API_KEY not set — manager replies will be printed, not spoken.",
             file=sys.stderr,
         )
 
@@ -199,10 +199,10 @@ async def run_voice_mode(session: Session, persona: ManagerPersona, max_turns: i
             }
         )
 
-        # ── speak reply via Rime TTS (if enabled) ──────────────────
-        if rime_enabled:
+        # ── speak reply via ElevenLabs TTS (if enabled) ────────────
+        if elevenlabs_enabled:
             try:
-                await _speak_rime(manager_text, rime_key, sd)
+                await _speak_elevenlabs(manager_text, elevenlabs_key, sd)
             except Exception as e:  # noqa: BLE001
                 print(f"   ⚠ TTS playback failed: {e} (continuing)", file=sys.stderr)
 
@@ -223,7 +223,7 @@ def _record_until_silence(sd, session: Session, turn: int) -> bytes:
     """
     import numpy as np
 
-    threshold = 500  # int16 RMS amplitude below which we call it silence
+    threshold = 500  # int16 RMS amplitude below which we call it silence. This was initially 500 but i changed to 250
     chunk_ms = 100
     chunk_samples = int(SAMPLE_RATE * chunk_ms / 1000)
     silence_chunks_needed = int(SILENCE_TIMEOUT_S * 1000 / chunk_ms)
@@ -377,6 +377,60 @@ async def _speak_rime(text: str, api_key: str, sd) -> None:
 
     segment = AudioSegment.from_file(BytesIO(mp3_bytes), format="mp3")
     # Resample + convert to int16 mono for sounddevice
+    segment = segment.set_frame_rate(SAMPLE_RATE).set_channels(1).set_sample_width(2)
+
+    import numpy as np
+
+    samples = np.array(segment.get_array_of_samples(), dtype=np.int16)
+    sd.play(samples, samplerate=SAMPLE_RATE)
+    sd.wait()
+
+
+# ---------------------------------------------------------------------------
+# ElevenLabs TTS + playback
+# ---------------------------------------------------------------------------
+async def _speak_elevenlabs(text: str, api_key: str, sd) -> None:
+    """Call ElevenLabs TTS REST API, get MP3 back, play it.
+
+    Optional env overrides:
+      ELEVENLABS_VOICE_ID — defaults to 'pNInz6obpgDQGcFmaJgB' (Adam)
+      ELEVENLABS_MODEL_ID — defaults to 'eleven_monolingual_v1'
+    """
+    import httpx
+
+    voice_id = os.environ.get("ELEVENLABS_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
+    model_id = os.environ.get("ELEVENLABS_MODEL_ID", "eleven_monolingual_v1")
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+    payload = {
+        "text": text,
+        "model_id": model_id,
+        "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
+    }
+    headers = {
+        "xi-api-key": api_key,
+        "Content-Type": "application/json",
+        "Accept": "audio/mpeg",
+    }
+
+    async with httpx.AsyncClient(timeout=30.0) as http:
+        resp = await http.post(url, json=payload, headers=headers)
+        if resp.status_code != 200:
+            raise RuntimeError(f"ElevenLabs {resp.status_code}: {resp.text[:200]}")
+        mp3_bytes = resp.content
+
+    try:
+        from io import BytesIO
+
+        from pydub import AudioSegment  # type: ignore[import-not-found]
+    except ImportError:
+        print(
+            "   (pydub not installed; can't decode mp3 for playback — "
+            "install with: uv sync --extra voice)",
+            file=sys.stderr,
+        )
+        return
+
+    segment = AudioSegment.from_file(BytesIO(mp3_bytes), format="mp3")
     segment = segment.set_frame_rate(SAMPLE_RATE).set_channels(1).set_sample_width(2)
 
     import numpy as np

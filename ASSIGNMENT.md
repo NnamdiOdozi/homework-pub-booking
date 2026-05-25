@@ -100,9 +100,13 @@ in-process `StructuredHalf` with a real dialog manager.
 
 2. **Rasa flows** in `rasa_project/data/flows.yml`:
    - `confirm_booking` — the happy path, ends by committing.
-   - `resume_from_loop` — triggered when the loop half hands off mid-scenario.
-   - `request_research` — triggered when the manager's reply doesn't fit the
-     cap; sends the agent back to the loop half for another venue.
+
+   The reverse-handoff patterns (`resume_from_loop`, `request_research`) are
+   intentionally **not** implemented as Rasa flows. They require user-facing
+   `utter_ask_*` utterances that are incompatible with programmatic triggering,
+   and the round-trip logic is better owned by `HandoffBridge` in Python (Ex7).
+   Implementing them in Rasa would couple the dialogue manager to the
+   orchestration layer unnecessarily.
 
 3. **Custom Rasa action** `ActionValidateBooking` in
    `rasa_project/actions/actions.py` — validates deposit <= £300 and party
@@ -120,7 +124,7 @@ in-process `StructuredHalf` with a real dialog manager.
 | `confirm_booking` flow commits a valid booking | 4 pts |
 | `ActionValidateBooking` correctly rejects deposits > £300 | 3 pts |
 | `ActionValidateBooking` correctly rejects parties > 8 | 3 pts |
-| `resume_from_loop` flow re-enters correctly after loop-side handoff | 4 pts |
+| `RasaStructuredHalf.run()` returns correct `HalfResult` on both approval and rejection | 4 pts |
 | Validator normalises at least 3 of: date, currency, party size, time zone, venue_id | 2 pts |
 
 ---

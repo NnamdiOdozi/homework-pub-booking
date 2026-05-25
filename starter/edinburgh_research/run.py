@@ -196,28 +196,35 @@ async def run_scenario(real: bool) -> int:
     clear_log()
 
     with example_sessions_dir("ex5-edinburgh-research", persist=real) as sessions_root:
+        task = (
+            "Research an Edinburgh pub and produce an HTML event flyer.\n\n"
+            "Context:\n"
+            "  - party size: 6\n"
+            "  - date: 2026-04-25 (a Saturday)\n"
+            "  - time: 19:30\n"
+            "  - area: near Haymarket\n\n"
+            "REQUIRED tool sequence (all four tools MUST run, in order):\n"
+            "  1. venue_search(near='Haymarket', party_size=6, budget_max_gbp=800)\n"
+            "  2. get_weather(city='edinburgh', date='2026-04-25')\n"
+            "  3. calculate_cost(venue_id=<chosen pub's id>, party_size=6,\n"
+            "                    duration_hours=3, catering_tier='bar_snacks')\n"
+            "  4. generate_flyer(event_details={...})  <-- MUST be called\n"
+            "  5. complete_task(result={'flyer': 'workspace/flyer.html', ...})\n\n"
+            "HARD RULES — follow exactly, no exceptions:\n"
+            "  * Call venue_search EXACTLY ONCE with near='Haymarket', party_size=6.\n"
+            "  * Do NOT change party_size — it is 6 for every tool call.\n"
+            "  * Do NOT search any area other than Haymarket — the fixture only has Haymarket data.\n"
+            "  * If venue_search returns 0 results, report that and stop — do NOT retry with different args.\n"
+            "  * Do NOT call handoff_to_structured — this scenario has no structured half.\n"
+            "  * Do NOT call complete_task until you have called generate_flyer.\n\n"
+            "The scenario is graded by the existence of workspace/flyer.html, "
+            "not by your final text response. The flyer is HTML — exact tool "
+            "names and argument shapes are in each tool's docstring; call them "
+            "exactly as described."
+        )
         session = create_session(
             scenario="edinburgh-research",
-            task=(
-                "Research an Edinburgh pub and produce an HTML event flyer.\n\n"
-                "Context:\n"
-                "  - party size: 6\n"
-                "  - date: 2026-04-25 (a Saturday)\n"
-                "  - time: 19:30\n"
-                "  - area: near Haymarket station, Edinburgh\n\n"
-                "REQUIRED tool sequence (all four tools MUST run, in order):\n"
-                "  1. venue_search(near='Haymarket', party_size=6, budget_max_gbp=800)\n"
-                "  2. get_weather(city='edinburgh', date='2026-04-25')\n"
-                "  3. calculate_cost(venue_id=<chosen pub's id>, party_size=6,\n"
-                "                    duration_hours=3, catering_tier='bar_snacks')\n"
-                "  4. generate_flyer(event_details={...})  <-- MUST be called\n"
-                "  5. complete_task(result={'flyer': 'workspace/flyer.html', ...})\n\n"
-                "Do NOT call complete_task until you have called generate_flyer. "
-                "The scenario is graded by the existence of workspace/flyer.html, "
-                "not by your final text response. The flyer is HTML — exact tool "
-                "names and argument shapes are in each tool's docstring; call them "
-                "exactly as described."
-            ),
+            task=task,
             sessions_dir=sessions_root,
         )
         print(f"Session {session.session_id}")
@@ -242,12 +249,15 @@ async def run_scenario(real: bool) -> int:
             planner_model = executor_model = "fake"
 
         tools = build_tool_registry(session)
+        # Remove handoff_to_structured — this scenario has no structured half.
+        # Removing the affordance is more reliable than instructing the LLM not to use it.
+        tools.unregister("handoff_to_structured")
         half = LoopHalf(
             planner=DefaultPlanner(model=planner_model, client=client),
             executor=DefaultExecutor(model=executor_model, client=client, tools=tools),  # type: ignore[arg-type]
         )
 
-        result = await half.run(session, {"task": "research Edinburgh venue and write flyer"})
+        result = await half.run(session, {"task": task})
         print(f"\nLoop half outcome: {result.next_action}")
         print(f"  summary: {result.summary}")
 
@@ -262,6 +272,17 @@ async def run_scenario(real: bool) -> int:
             from starter.edinburgh_research.integrity import _TOOL_CALL_LOG
 
             if _TOOL_CALL_LOG:
+                from collections import Counter
+                counts = Counter(r.tool_name for r in _TOOL_CALL_LOG)
+                all_tools = ["venue_search", "get_weather", "calculate_cost", "generate_flyer"]
+                print(f"\n  Tool-call histogram ({len(_TOOL_CALL_LOG)} total):")
+                for tool, n in counts.most_common():
+                    bar = "█" * n
+                    spiral = " ← SPIRAL?" if tool == "venue_search" and n >= 3 else ""
+                    print(f"    {tool:30s} {bar}{spiral}")
+                never = [t for t in all_tools if t not in counts]
+                if never:
+                    print(f"    ★ NEVER CALLED: {', '.join(never)}")
                 print(f"\n  Tools that DID run ({len(_TOOL_CALL_LOG)} calls):")
                 for i, rec in enumerate(_TOOL_CALL_LOG, 1):
                     args_preview = str(rec.arguments)[:80]

@@ -97,6 +97,11 @@ async def run_scenario(real: bool, auto: bool) -> int:
         print(f"  summary: {result.summary}")
         print(f"  output:  {result.output}")
 
+        if result.success:
+            session.mark_complete(result.output)
+        else:
+            session.mark_failed(result.summary)
+
         if real:
             print(f"\n📂 Session artifacts: {session.directory}")
             print(f"📜 Narrate this run:   make narrate SESSION={session.session_id}")

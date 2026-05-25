@@ -236,6 +236,13 @@ def find_session(session_id_or_path: str) -> Path | None:
         if sub.is_dir():
             return sub.resolve()
 
+    # Local sessions/examples/*/ (real runs from example_sessions_dir)
+    if Path("sessions/examples").exists():
+        for ex_dir in Path("sessions/examples").iterdir():
+            for sub in ex_dir.glob(f"*{session_id_or_path}*"):
+                if sub.is_dir():
+                    return sub.resolve()
+
     # Platform user-data dir
     data_root = _platform_data_dir()
     if data_root.exists():
@@ -357,6 +364,7 @@ def main() -> int:
         candidates: list[Path] = []
         if Path("sessions").exists():
             candidates.extend(Path("sessions").glob("sess_*"))
+            candidates.extend(Path("sessions").glob("examples/*/sess_*"))
         data_root = _platform_data_dir()
         if data_root.exists():
             candidates.extend(data_root.glob("examples/*/sess_*"))

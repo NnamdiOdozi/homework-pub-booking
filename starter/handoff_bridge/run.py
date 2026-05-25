@@ -10,6 +10,7 @@ import sys
 
 from sovereign_agent._internal.llm_client import (
     FakeLLMClient,
+    OpenAICompatibleClient,
     ScriptedResponse,
     ToolCall,
 )
@@ -139,11 +140,31 @@ async def run_scenario(real: bool) -> int:
         else:
             rasa_half = RasaStructuredHalf()
 
-        client = _build_fake_client_two_rounds()
+        if real:
+            from sovereign_agent.config import Config
+
+            cfg = Config.from_env()
+            print(f"  LLM: {cfg.llm_base_url} (live)")
+            print(f"  planner:  {cfg.llm_planner_model}")
+            print(f"  executor: {cfg.llm_executor_model}")
+            client = OpenAICompatibleClient(
+                base_url=cfg.llm_base_url,
+                api_key_env=cfg.llm_api_key_env,
+            )
+            planner_model = cfg.llm_planner_model
+            executor_model = cfg.llm_executor_model
+        else:
+            print("  LLM: FakeLLMClient (offline, scripted)")
+            client = _build_fake_client_two_rounds()
+            planner_model = executor_model = "fake"
+
         tools = build_tool_registry(session)
+        # Remove complete_task so LLM can't prematurely end the session —
+        # the only valid exit is handoff_to_structured (Slide 13/15 principle).
+        tools.unregister("complete_task")
         loop_half = LoopHalf(
-            planner=DefaultPlanner(model="fake", client=client),
-            executor=DefaultExecutor(model="fake", client=client, tools=tools),  # type: ignore[arg-type]
+            planner=DefaultPlanner(model=planner_model, client=client),
+            executor=DefaultExecutor(model=executor_model, client=client, tools=tools),  # type: ignore[arg-type]
         )
         bridge = HandoffBridge(
             loop_half=loop_half,
@@ -152,7 +173,27 @@ async def run_scenario(real: bool) -> int:
         )
 
         try:
-            result = await bridge.run(session, {"task": "book for party of 12 in Haymarket"})
+            result = await bridge.run(
+                session,
+                {
+                    "task": (
+                        "Book an Edinburgh pub for 12 people, Friday 25 April 2026 at 19:30.\n\n"
+                        "STEP 1 — find a venue:\n"
+                        "  Call venue_search(near='Haymarket', party_size=12, budget_max_gbp=2000).\n"
+                        "  If count is 0, immediately call venue_search(near='Haymarket', party_size=1, budget_max_gbp=2000).\n"
+                        "  Pick the first venue from the results list. Note its 'name' field.\n\n"
+                        "STEP 2 — hand off to booking system (DO NOT call complete_task):\n"
+                        "  Call handoff_to_structured with exactly this structure, substituting the venue name:\n"
+                        "  handoff_to_structured(\n"
+                        "    reason='venue identified',\n"
+                        "    context='found <venue name> in Haymarket',\n"
+                        "    data={'action': 'confirm_booking', 'venue_id': '<venue name from results>', 'date': '2026-04-25', 'time': '19:30', 'party_size': '12', 'deposit': '£0'}\n"
+                        "  )\n"
+                        "  IMPORTANT: venue_id must be the venue's display name (e.g. 'Haymarket Tap'), taken directly from the 'name' field in venue_search results.\n"
+                        "  IMPORTANT: Do NOT call complete_task. Only handoff_to_structured triggers the booking.\n"
+                    )
+                },
+            )
         finally:
             if server is not None:
                 server.shutdown()

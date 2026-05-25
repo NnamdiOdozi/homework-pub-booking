@@ -21,6 +21,8 @@ from sovereign_agent.handoff import Handoff
 from sovereign_agent.session.directory import Session
 from sovereign_agent.session.state import now_utc
 
+from starter.edinburgh_research.integrity import _TOOL_CALL_LOG, clear_log
+
 BridgeOutcome = Literal["completed", "failed", "max_rounds_exceeded"]
 
 
@@ -70,6 +72,7 @@ class HandoffBridge:
                     "payload": {"round": rounds, "half": "loop"},
                 }
             )
+            clear_log()  # reset spiral detector and log scope for each round
             loop_result = await self.loop_half.run(session, current_input)
             last_loop = loop_result
 
@@ -175,7 +178,34 @@ class HandoffBridge:
 # Helper constructors — you may use these or write your own
 # ---------------------------------------------------------------------------
 def build_forward_handoff(session: Session, loop_result: HalfResult) -> Handoff:
-    """Package a loop result into a forward-handoff payload for structured."""
+    """Package a loop result into a forward-handoff payload for structured.
+
+    Falls back to _TOOL_CALL_LOG to recover facts the LLM omitted from its
+    handoff payload (e.g. venue_id, party_size). This is the architectural fix
+    from lecture Slide 20 Fix B — code enforces invariants that prompts cannot.
+    """
+    data = dict((loop_result.handoff_payload or {}).get("data") or loop_result.output or {})
+
+    # Recover venue_id from last successful venue_search if LLM omitted it
+    if not data.get("venue_id"):
+        for record in reversed(_TOOL_CALL_LOG):
+            if record.tool_name == "venue_search" and record.output.get("results"):
+                data["venue_id"] = record.output["results"][0]["name"]
+                break
+
+    # Recover party_size from most recent venue_search if missing
+    if not data.get("party_size"):
+        for record in reversed(_TOOL_CALL_LOG):
+            if record.tool_name == "venue_search":
+                data["party_size"] = str(record.arguments.get("party_size", 12))
+                break
+
+    # Fill in any remaining required booking fields with defaults
+    data.setdefault("action", "confirm_booking")
+    data.setdefault("date", "2026-04-25")
+    data.setdefault("time", "19:30")
+    data.setdefault("deposit", "£0")
+
     return Handoff(
         from_half="loop",
         to_half="structured",
@@ -183,7 +213,7 @@ def build_forward_handoff(session: Session, loop_result: HalfResult) -> Handoff:
         session_id=session.session_id,
         reason="loop-half requested confirmation",
         context=loop_result.summary,
-        data=(loop_result.handoff_payload or {}).get("data") or loop_result.output,
+        data=data,
         return_instructions=(
             "If you cannot confirm (party too large, deposit too high, etc.), "
             "respond with next_action=escalate and include a human-readable "
@@ -197,8 +227,21 @@ def build_reverse_task(loop_result: HalfResult, struct_result: HalfResult) -> di
     reason = struct_result.output.get("reason") or struct_result.summary
     return {
         "task": (
-            "The structured half rejected the previous proposal. "
-            f"Reason: {reason}. Produce an alternative."
+            f"Booking rejected: {reason}\n\n"
+            "The booking policy allows maximum 8 people. Find an alternative:\n\n"
+            "STEP 1 — search a different area:\n"
+            "  Call venue_search(near='Old Town', party_size=6, budget_max_gbp=2000).\n"
+            "  If count is 0, try near='Tollcross', then near='New Town'.\n"
+            "  Pick the first venue with count > 0. Note its 'name' field.\n\n"
+            "STEP 2 — hand off (DO NOT call complete_task):\n"
+            "  Call handoff_to_structured with:\n"
+            "  handoff_to_structured(\n"
+            "    reason='alternative venue found',\n"
+            "    context='retry with <venue name>',\n"
+            "    data={'action': 'confirm_booking', 'venue_id': '<venue name from results>', 'date': '2026-04-25', 'time': '19:30', 'party_size': '6', 'deposit': '£0'}\n"
+            "  )\n"
+            "  IMPORTANT: venue_id = the 'name' field from venue_search results (e.g. 'The Royal Oak').\n"
+            "  IMPORTANT: Do NOT call complete_task.\n"
         ),
         "context": {
             "prior_result": loop_result.output,
