@@ -4,30 +4,38 @@
 
 ### Your answer
 
-In session `sess_ad5adfe19a16` (Ex7 real run), round 1 planner ticket
-`tk_e05167c0` produced two subgoals. sg_2 has `"assigned_half":
+In session `sess_ad5adfe19a16` (Ex7 working run), round 1 planner ticket
+`tk_e05167c0` produced two subgoals. Subgoal sg_2 has `"assigned_half":
 "structured"` and `"description": "Hand off to the booking system with
-the selected venue"`. The signal: the task text explicitly names a
-booking confirmation step, and the DefaultPlanner system prompt
-instructs it to use `structured` for subgoals requiring strict
-rule-following. The planner read "hand off to the booking system" as
-a deterministic policy step and assigned it accordingly.
+the selected venue"`. The signal the planner acted on was the task text
+itself, which explicitly included a step named "hand off to the booking
+system." The DefaultPlanner system prompt instructs it to assign `structured`
+for subgoals requiring deterministic rule-following rather than open-ended
+search, and the phrase "hand off to the booking system" was read as a
+deterministic policy step: a binary committed/rejected decision with no
+room for LLM improvisation.
 
-This assignment is advisory, not enforced by hardware. The bridge
-respects it only because both halves are wired and the executor calls
-`handoff_to_structured` when sg_2 runs. If `complete_task` remained
-in the registry, the LLM could bypass the handoff entirely — which
-was the original failure mode before it was removed from the loop
-registry.
+This assignment is advisory, not enforced by the framework. We discovered
+this the hard way in our earlier session `sess_9821b631a49c`. There,
+`complete_task` remained registered in the loop half's tool registry.
+The LLM used it at 12:25:52 to exit cleanly after finding Haymarket Tap
+— before ever calling `handoff_to_structured`. The trace shows
+`complete_task` called with a venue result dict, `session marked complete`,
+and no structured half involvement at all. The booking was never confirmed.
 
-The broader lesson: the planner's `assigned_half` field is prose
-interpretation, not a physical gate. The only reliable enforcement is
-code: remove affordances that let the LLM skip the structured half.
+The fix was `tools.unregister("complete_task")` immediately after
+`build_tool_registry(session)` in `run.py`. With the tool absent, the
+only valid exit from the loop half is `handoff_to_structured`. The planner's
+`assigned_half: "structured"` field then becomes meaningful — not because
+the framework enforces it, but because the LLM has no other way out. The
+lesson: `assigned_half` is a prose interpretation, not a gate. Instructions
+can be ignored; missing tools cannot.
 
-### Citation
+### Citations
 
 - `sessions/examples/ex7-handoff-bridge/sess_ad5adfe19a16/logs/tickets/tk_e05167c0/raw_output.json`
 - `sessions/examples/ex7-handoff-bridge/sess_ad5adfe19a16/logs/trace.jsonl`
+- `sessions/examples/ex7-handoff-bridge/sess_9821b631a49c/logs/trace.jsonl` — line 6: `complete_task` called before handoff
 
 ---
 
@@ -35,33 +43,41 @@ code: remove affordances that let the LLM skip the structured half.
 
 ### Your answer
 
-Session `sess_7a751e32fa97` (Ex5). `verify_dataflow` would catch a
-fabrication that manual review would miss. The trace shows
-`generate_flyer` was called with placeholder `event_details`:
-`venue="Edinburgh Castle"`, `name="Sample Event"` — neither value
-appears in any prior tool output. The real venue returned by
-`venue_search` was `haymarket_tap`; "Edinburgh Castle" was never in
-any fixture.
+Session `sess_7a751e32fa97` (Ex5). The flyer was generated with fabricated
+`event_details`: `venue_name="Edinburgh Castle"`, `name="Sample Event"`.
+Neither value appeared in any tool output. The real venue returned by
+`venue_search` was `haymarket_tap`; "Edinburgh Castle" is not a fixture
+venue and never appeared in the log. The fabricated cost figures in the
+flyer also differed from what `calculate_cost` actually returned.
 
-A human reviewer scanning `workspace/flyer.html` sees a formatted
-flyer with a plausible Edinburgh venue name and reasonable cost
-figures. Nothing looks obviously wrong. `verify_dataflow` compares
-flyer content against `_TOOL_CALL_LOG` entries: "Edinburgh Castle"
-matches zero tool outputs, so it returns `unverified_facts` containing
-the venue name and flags the discrepancy.
+A human reviewer scanning `workspace/flyer.html` sees a formatted page
+with a plausible Edinburgh venue name and reasonable cost figures. The
+layout is correct, the HTML is well-formed, the numbers look credible.
+Nothing flags as wrong. `verify_dataflow` caught it because it does not
+ask "does this look plausible" — it extracts money facts (£N), temperature
+facts (N°C), and condition keywords from the flyer, then calls
+`fact_appears_in_log` for each one. If a value in the flyer cannot be
+matched against any entry in `_TOOL_CALL_LOG`, it is returned in
+`unverified_facts`. The fabricated cost figure was one such value: it
+appeared in the flyer but not in any tool output record.
 
-The check catches this because it compares against ground truth in the
-log, not against "does this look plausible." The same mechanism would
-catch hallucinated cost figures: if `calculate_cost` returned £2540
-but the flyer said £1800, the regex extractor finds £1800 in the flyer
-text and cannot find it in any tool output → flagged. Manual review
-sees a believable number and passes it.
+In our second run `sess_0111f73b3160`, the LLM again passed fabricated
+`event_details` (`{"venue": "The Royal Terrace", "date": "2023-08-15",
+"weather": "Sunny, 22°C"}`) to `generate_flyer`. This time the
+`_build_event_details_from_log` interceptor overwrote these with real
+values from `_TOOL_CALL_LOG` before the tool ran. The resulting flyer
+showed The Royal Oak, cloudy 12°C, £1103 deposit £330. `verify_dataflow`
+verified 4 facts. The contrast between the two sessions demonstrates the
+check's value: in both cases the LLM produced a plausible-looking call;
+only the integrity layer distinguished one from the other.
 
-### Citation
+### Citations
 
-- `sessions/examples/ex5-edinburgh-research/sess_7a751e32fa97/logs/trace.jsonl` lines 6–7
+- `sessions/examples/ex5-edinburgh-research/sess_7a751e32fa97/logs/trace.jsonl`
 - `sessions/examples/ex5-edinburgh-research/sess_7a751e32fa97/workspace/flyer.html`
-- `starter/edinburgh_research/integrity.py` — verify_dataflow
+- `sessions/examples/ex5-edinburgh-research/sess_0111f73b3160/logs/trace.jsonl`
+- `sessions/examples/ex5-edinburgh-research/sess_0111f73b3160/workspace/flyer.html`
+- `starter/edinburgh_research/integrity.py` — verify_dataflow, fact_appears_in_log
 
 ---
 
@@ -69,30 +85,42 @@ sees a believable number and passes it.
 
 ### Your answer
 
-The first production failure I'd expect: the Rasa webhook goes down
-mid-session between the loop half completing and the structured half
-acknowledging. The booking data is in the IPC file; the bridge has
-handed off; but the HTTP POST to Rasa times out or returns 503. With
-no retry and no durable record of the attempt, the session is stuck —
-`structured` never transitions to `completed` or `escalated`, the
-bridge hangs until `max_rounds`, and the booking is silently lost.
+The first production failure we observed directly: the loop half
+consistently omitting `venue_id` from the `handoff_to_structured` payload,
+causing the structured half to reject every round with the same error. In
+session `sess_9821b631a49c`, this happened three times in succession. The
+trace records `session.state_changed: structured → loop, rejection_reason:
+"normalisation failed: missing venue_id"` at 12:28:07, 12:29:02, and
+12:29:40 — three consecutive rounds, identical failure, no progress. The
+bridge exhausted its round limit and the booking was silently lost.
 
-The primitive that surfaces it is the **ticket state machine**. Every
-`planner.plan` and executor subgoal run produces a ticket with
-`state: error | completed`. If the Rasa call fails, the structured
-half's ticket transitions to `error` with `error_code:
-SA_EXT_SERVICE_UNAVAILABLE`. Without the ticket, the failure is a
-silent timeout — nothing in the trace distinguishes "structured half
-rejected" from "structured half never got the request." With the
-ticket, `state.json` in `logs/tickets/tk_*/` records the exact
-failure code, timestamp, and duration, making the failure observable
-and retryable.
+In a production pub-booking system this is the most damaging failure mode:
+the customer sees nothing (the agent appeared to be working), the pub sees
+nothing, and the booking evaporates. No exception is raised, no alert fires
+unless someone inspects the logs.
 
-In session `sess_ad5adfe19a16` the structured half's ticket recorded
-state transitions cleanly; any 503 from Rasa would appear there first
-before surfacing in the bridge outcome.
+The primitive that surfaces it is the **ticket state machine**. Session
+`sess_9821b631a49c` has 8 tickets (`tk_18a89641`, `tk_d9720b42`,
+`tk_76bad39d`, `tk_e2e5a228`, `tk_ba40950b`, `tk_cc40a000`, `tk_c2e5c7c7`,
+`tk_4204f70d`) across 3 rounds. Each planner and executor subgoal creates
+a ticket with `started_at` and `completed_at` in `logs/tickets/tk_*/state.json`.
+The bridge's trace events carry a `rejection_reason` field on every
+`structured → loop` transition. Together these make the failure pattern
+observable: an alert rule that fires when the same `rejection_reason` appears
+on three consecutive `session.state_changed` events would have caught this
+in the first minute. Without the structured ticket and trace records, an
+operator sees "bridge completed in 3 rounds" with no indication that rounds
+1, 2, and 3 all failed for the same preventable reason.
 
-### Citation
+The fix in our working session `sess_ad5adfe19a16` was `build_forward_handoff`
+in `bridge.py`, which scans `_TOOL_CALL_LOG` for the most recent successful
+`venue_search` result and patches the missing `venue_id` into the payload
+before forwarding. The ticket record for that session shows the structured half
+completing cleanly in round 2, booking reference `BK-4B5F7858`.
 
-- `sessions/examples/ex7-handoff-bridge/sess_ad5adfe19a16/logs/tickets/`
-- `sessions/examples/ex7-handoff-bridge/sess_ad5adfe19a16/logs/trace.jsonl`
+### Citations
+
+- `sessions/examples/ex7-handoff-bridge/sess_9821b631a49c/logs/trace.jsonl` — lines 14, 23, 31
+- `sessions/examples/ex7-handoff-bridge/sess_9821b631a49c/logs/tickets/` — 8 tickets across 3 rounds
+- `sessions/examples/ex7-handoff-bridge/sess_ad5adfe19a16/logs/trace.jsonl` — line 15: BK-4B5F7858
+- `starter/handoff_bridge/bridge.py` — build_forward_handoff
