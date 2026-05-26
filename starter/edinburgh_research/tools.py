@@ -63,7 +63,8 @@ def venue_search(near: str, party_size: int, budget_max_gbp: int = 1000) -> Tool
 
     # Apply all four filters from the docstring
     results = [
-        v for v in venues
+        v
+        for v in venues
         if v["open_now"]
         and near.lower() in v["area"].lower()
         and v["seats_available_evening"] >= party_size
@@ -175,7 +176,12 @@ def calculate_cost(
     # Find the venue — return success=False if unknown (bad input, not infrastructure)
     venue = next((v for v in venues if v["id"] == venue_id), None)
     if venue is None:
-        args = {"venue_id": venue_id, "party_size": party_size, "duration_hours": duration_hours, "catering_tier": catering_tier}
+        args = {
+            "venue_id": venue_id,
+            "party_size": party_size,
+            "duration_hours": duration_hours,
+            "catering_tier": catering_tier,
+        }
         output = {"venue_id": venue_id, "error": f"unknown venue {venue_id!r}"}
         record_tool_call("calculate_cost", args, output)
         return ToolResult(
@@ -187,9 +193,9 @@ def calculate_cost(
 
     # --- cost formula (from docstring) ---
     base_per_head = catering["base_rates_gbp_per_head"][catering_tier]  # e.g. bar_snacks = £18/head
-    venue_mult = catering["venue_modifiers"].get(venue_id, 1.0)          # e.g. haymarket_tap = 1.0
+    venue_mult = catering["venue_modifiers"].get(venue_id, 1.0)  # e.g. haymarket_tap = 1.0
     subtotal = int(base_per_head * venue_mult * party_size * max(1, duration_hours))
-    service = int(subtotal * catering["service_charge_percent"] / 100)   # 10% service charge
+    service = int(subtotal * catering["service_charge_percent"] / 100)  # 10% service charge
     total = subtotal + service + venue["hire_fee_gbp"] + venue["min_spend_gbp"]
 
     # --- deposit policy thresholds (from catering.json deposit_policy) ---
@@ -200,7 +206,12 @@ def calculate_cost(
     else:
         deposit = int(total * 0.30)
 
-    args = {"venue_id": venue_id, "party_size": party_size, "duration_hours": duration_hours, "catering_tier": catering_tier}
+    args = {
+        "venue_id": venue_id,
+        "party_size": party_size,
+        "duration_hours": duration_hours,
+        "catering_tier": catering_tier,
+    }
     output = {
         "venue_id": venue_id,
         "party_size": party_size,
@@ -326,7 +337,9 @@ def _build_event_details_from_log(event_details: dict) -> dict:
     for rec in reversed(_TOOL_CALL_LOG):
         if rec.tool_name == "get_weather" and rec.output.get("condition"):
             patched["condition"] = rec.output["condition"]
-            patched["temperature_c"] = rec.output.get("temperature_c", patched.get("temperature_c", ""))
+            patched["temperature_c"] = rec.output.get(
+                "temperature_c", patched.get("temperature_c", "")
+            )
             patched["date"] = rec.output.get("date", patched.get("date", ""))
             break
 

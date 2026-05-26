@@ -273,6 +273,7 @@ async def run_scenario(real: bool) -> int:
 
             if _TOOL_CALL_LOG:
                 from collections import Counter
+
                 counts = Counter(r.tool_name for r in _TOOL_CALL_LOG)
                 all_tools = ["venue_search", "get_weather", "calculate_cost", "generate_flyer"]
                 print(f"\n  Tool-call histogram ({len(_TOOL_CALL_LOG)} total):")

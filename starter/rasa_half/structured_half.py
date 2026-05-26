@@ -74,12 +74,14 @@ class RasaStructuredHalf(StructuredHalf):
         }
 
     async def run(self, session: Session, input_payload: dict) -> HalfResult:
-        session.append_trace_event({
-            "event_type": "session.state_changed",
-            "actor": self.name,
-            "timestamp": now_utc().isoformat(),
-            "payload": {"from": session.state.state, "to": "executing"},
-        })
+        session.append_trace_event(
+            {
+                "event_type": "session.state_changed",
+                "actor": self.name,
+                "timestamp": now_utc().isoformat(),
+                "payload": {"from": session.state.state, "to": "executing"},
+            }
+        )
         session.update_state(state="executing")
 
         data = input_payload.get("data") if isinstance(input_payload, dict) else None
@@ -186,12 +188,18 @@ class RasaStructuredHalf(StructuredHalf):
                 rejection_reason = text or "rejected by rasa"
 
         if confirmed and not rejected:
-            session.append_trace_event({
-                "event_type": "session.state_changed",
-                "actor": self.name,
-                "timestamp": now_utc().isoformat(),
-                "payload": {"from": "executing", "to": "completed", "booking_reference": booking_reference},
-            })
+            session.append_trace_event(
+                {
+                    "event_type": "session.state_changed",
+                    "actor": self.name,
+                    "timestamp": now_utc().isoformat(),
+                    "payload": {
+                        "from": "executing",
+                        "to": "completed",
+                        "booking_reference": booking_reference,
+                    },
+                }
+            )
             return HalfResult(
                 success=True,
                 output={
@@ -205,12 +213,14 @@ class RasaStructuredHalf(StructuredHalf):
             )
 
         if rejected:
-            session.append_trace_event({
-                "event_type": "session.state_changed",
-                "actor": self.name,
-                "timestamp": now_utc().isoformat(),
-                "payload": {"from": "executing", "to": "escalated", "reason": rejection_reason},
-            })
+            session.append_trace_event(
+                {
+                    "event_type": "session.state_changed",
+                    "actor": self.name,
+                    "timestamp": now_utc().isoformat(),
+                    "payload": {"from": "executing", "to": "escalated", "reason": rejection_reason},
+                }
+            )
             return HalfResult(
                 success=False,
                 output={
