@@ -1,0 +1,2 @@
+{"event_type": "bridge.round_start", "actor": "bridge", "payload": {"round": 1, "half": "loop"}}
+{"event_type": "planner.called", "actor": "default", "timestamp": "2026-05-25T13:09:01.128429+00:00", "payload": {"task_preview": "Book an Edinburgh pub for 12 people, Friday 25 April 2026 at 19:30.\n\nSTEP 1 \u2014 find a venue:\n  Call venue_search(near='Haymarket', party_size=12, budget_max_gbp=2000).\n  If count is 0, immediately call"}}

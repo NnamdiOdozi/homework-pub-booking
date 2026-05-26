@@ -1,0 +1,22 @@
+[
+  {
+    "id": "sg_1",
+    "description": "Search for venues in Edinburgh areas (Old Town, New Town, Tollcross) with party_size=6 and evening availability",
+    "success_criterion": "At least one venue with available slots and venue_id is returned",
+    "estimated_tool_calls": 1,
+    "depends_on": [],
+    "assigned_half": "loop",
+    "status": "pending"
+  },
+  {
+    "id": "sg_2",
+    "description": "Call handoff_to_structured with the venue_id from the search result and booking details",
+    "success_criterion": "Booking confirmation is successfully processed",
+    "estimated_tool_calls": 1,
+    "depends_on": [
+      "sg_1"
+    ],
+    "assigned_half": "structured",
+    "status": "pending"
+  }
+]

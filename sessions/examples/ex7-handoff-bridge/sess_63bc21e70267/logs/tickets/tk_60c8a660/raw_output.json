@@ -1,0 +1,22 @@
+[
+  {
+    "id": "sg_1",
+    "description": "Retrieve venue_id using available data sources such as venue name or other identifiers",
+    "success_criterion": "venue_id is successfully retrieved and stored in the system",
+    "estimated_tool_calls": 1,
+    "depends_on": [],
+    "assigned_half": "loop",
+    "status": "pending"
+  },
+  {
+    "id": "sg_2",
+    "description": "Incorporate the retrieved venue_id into the proposal data structure",
+    "success_criterion": "proposal now includes a valid venue_id field",
+    "estimated_tool_calls": 1,
+    "depends_on": [
+      "sg_1"
+    ],
+    "assigned_half": "loop",
+    "status": "pending"
+  }
+]

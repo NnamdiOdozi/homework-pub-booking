@@ -1,0 +1,45 @@
+[
+  {
+    "id": "sg_1",
+    "description": "Search for venues near Haymarket for 12 people with a budget of \u00a32000.",
+    "success_criterion": "venue_search returns results (even if empty)",
+    "estimated_tool_calls": 1,
+    "depends_on": [],
+    "assigned_half": "loop",
+    "status": "pending"
+  },
+  {
+    "id": "sg_2",
+    "description": "Retry venue search with party_size=1 to list all pubs in Haymarket area if initial search returned no results.",
+    "success_criterion": "search returns at least one venue",
+    "estimated_tool_calls": 1,
+    "depends_on": [
+      "sg_1"
+    ],
+    "assigned_half": "loop",
+    "status": "pending"
+  },
+  {
+    "id": "sg_3",
+    "description": "Select the best available venue from the search results.",
+    "success_criterion": "a venue is chosen with a valid display name",
+    "estimated_tool_calls": 0,
+    "depends_on": [
+      "sg_1",
+      "sg_2"
+    ],
+    "assigned_half": "loop",
+    "status": "pending"
+  },
+  {
+    "id": "sg_4",
+    "description": "Forward venue details to structured half for booking confirmation.",
+    "success_criterion": "handoff_to_structured returns a confirmation response",
+    "estimated_tool_calls": 1,
+    "depends_on": [
+      "sg_3"
+    ],
+    "assigned_half": "structured",
+    "status": "pending"
+  }
+]

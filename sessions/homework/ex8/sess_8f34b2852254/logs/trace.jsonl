@@ -1,0 +1,8 @@
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:47:01.746577+00:00", "payload": {"text": "Hi . Good evening . I'd like to make a booking for tomorrow . Tuesday for six people . And it's at 6 p.m. . My telephone number is 07768\u00a0868891 . I'm .", "turn": 0, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:47:03.018260+00:00", "payload": {"text": "Aye, we can do that. I'll pencil you in for Tuesday at 6 p.m. What's the deposit?", "turn": 0, "mode": "voice"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:47:06.363687+00:00", "payload": {"text": "A deposit is \u00a3200 .", "turn": 1, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:47:12.328087+00:00", "payload": {"text": "Aye, we can do that. I'll pencil you in for Tuesday at 6 p.m. 07768 868891, right?", "turn": 1, "mode": "voice"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:47:17.559660+00:00", "payload": {"text": "\u00a3200 .", "turn": 2, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:47:28.648689+00:00", "payload": {"text": "Aye, that's fine. Tuesday at 6 p.m., 07768 868891.", "turn": 2, "mode": "voice"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:47:36.884137+00:00", "payload": {"text": "Okay , so see you tomorrow then . Bye bye .", "turn": 3, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:47:38.512306+00:00", "payload": {"text": "Aye, see you tomorrow.", "turn": 3, "mode": "voice"}}

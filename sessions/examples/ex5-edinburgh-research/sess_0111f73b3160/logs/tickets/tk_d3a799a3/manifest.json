@@ -1,0 +1,20 @@
+{
+  "ticket_id": "tk_d3a799a3",
+  "operation": "executor.run_subgoal/sg_2",
+  "started_at": "2026-05-25T21:24:03.505589+00:00",
+  "completed_at": "2026-05-25T21:24:22.973465+00:00",
+  "duration_ms": 19467,
+  "outputs": [
+    {
+      "path": "/home/nodozi/projects/NEBIUS_MAR_2026/AI_Agents/homework-pub-booking/sessions/examples/ex5-edinburgh-research/sess_0111f73b3160/logs/tickets/tk_d3a799a3/raw_output.json",
+      "sha256": "ae9f02141849e27f55e2390236571de114d634c30193d9a49e89bbb6ea4ee55a",
+      "size_bytes": 1702,
+      "content_type": "application/json"
+    }
+  ],
+  "metrics": {
+    "tool_calls": 2,
+    "turns_used": 3,
+    "handoff_requested": false
+  }
+}

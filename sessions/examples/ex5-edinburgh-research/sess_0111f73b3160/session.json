@@ -1,0 +1,81 @@
+{
+  "session_id": "sess_0111f73b3160",
+  "version": 1,
+  "created_at": "2026-05-25T21:23:30.610313+00:00",
+  "updated_at": "2026-05-25T21:23:41.699053+00:00",
+  "scenario": "edinburgh-research",
+  "state": "executing",
+  "user_id": null,
+  "current_half": "loop",
+  "planner": {
+    "subgoals": [
+      {
+        "id": "sg_1",
+        "description": "Find a suitable pub in Haymarket for a party of 6",
+        "success_criterion": "venue_search returns a list of venues",
+        "estimated_tool_calls": 1,
+        "depends_on": [],
+        "assigned_half": "loop",
+        "status": "pending"
+      },
+      {
+        "id": "sg_2",
+        "description": "Get the weather forecast for Edinburgh on 2026-04-25",
+        "success_criterion": "get_weather returns the weather forecast",
+        "estimated_tool_calls": 1,
+        "depends_on": [
+          "sg_1"
+        ],
+        "assigned_half": "loop",
+        "status": "pending"
+      },
+      {
+        "id": "sg_3",
+        "description": "Choose a pub and calculate the cost for the party",
+        "success_criterion": "calculate_cost returns the total cost",
+        "estimated_tool_calls": 1,
+        "depends_on": [
+          "sg_1",
+          "sg_2"
+        ],
+        "assigned_half": "loop",
+        "status": "pending"
+      },
+      {
+        "id": "sg_4",
+        "description": "Generate an HTML event flyer for the party",
+        "success_criterion": "generate_flyer produces an HTML flyer",
+        "estimated_tool_calls": 1,
+        "depends_on": [
+          "sg_1",
+          "sg_2",
+          "sg_3"
+        ],
+        "assigned_half": "loop",
+        "status": "pending"
+      },
+      {
+        "id": "sg_5",
+        "description": "Complete the task with the generated flyer",
+        "success_criterion": "complete_task is called with the flyer result",
+        "estimated_tool_calls": 1,
+        "depends_on": [
+          "sg_1",
+          "sg_2",
+          "sg_3",
+          "sg_4"
+        ],
+        "assigned_half": "loop",
+        "status": "pending"
+      }
+    ]
+  },
+  "executor": {},
+  "structured": {},
+  "memory": {},
+  "handoff_history": [],
+  "bare_mode": false,
+  "config_overrides": {},
+  "result": null,
+  "resumed_from": null
+}

@@ -1,0 +1,6 @@
+{
+  "session_id": "sess_0111f73b3160",
+  "result": {
+    "flyer_html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head><meta charset=\"UTF-8\"><title>Event Flyer \u2014 The Royal Oak</title>\n<style>\nbody { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 1rem; border: 2px solid #333; }\nh1 { color: #222; }\ndl { display: grid; grid-template-columns: 1fr 2fr; gap: 0.5rem; }\ndt { font-weight: bold; } dd { margin: 0; }\n.cost { background: #f5f5f5; padding: 1rem; border-radius: 4px; margin-top: 1rem; }\n</style>\n</head>\n<body>\n<h1>Edinburgh Pub Event</h1>\n<h2 data-testid=\"venue_name\">The Royal Oak</h2>\n<dl>\n  <dt>Address</dt><dd data-testid=\"venue_address\">1 Infirmary St, Edinburgh EH1 1LT</dd>\n  <dt>Date</dt><dd data-testid=\"date\">2026-04-25</dd>\n  <dt>Time</dt><dd data-testid=\"time\">19:00</dd>\n  <dt>Party size</dt><dd data-testid=\"party_size\">10</dd>\n  <dt>Weather</dt>\n  <dd><span data-testid=\"condition\">cloudy</span>, <span data-testid=\"temperature\">12\u00b0C</span></dd>\n</dl>\n<div class=\"cost\">\n  <h3>Cost Breakdown</h3>\n  <dl>\n    <dt>Total</dt><dd data-testid=\"total\">\u00a31103</dd>\n    <dt>Deposit required</dt><dd data-testid=\"deposit\">\u00a3330</dd>\n  </dl>\n</div>\n</body>\n</html>"
+  }
+}

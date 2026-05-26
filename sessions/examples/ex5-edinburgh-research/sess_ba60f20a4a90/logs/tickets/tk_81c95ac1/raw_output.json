@@ -1,0 +1,51 @@
+{
+  "subgoal_id": "sg_3",
+  "success": true,
+  "final_answer": "(handoff requested)",
+  "tool_calls_made": [
+    {
+      "name": "calculate_cost",
+      "arguments": {
+        "venue_id": "edinburgh_venue_456",
+        "party_size": 12,
+        "duration_hours": 4
+      },
+      "success": false,
+      "summary": "calculate_cost: unknown venue 'edinburgh_venue_456'",
+      "requires_human_approval": false
+    },
+    {
+      "name": "list_files",
+      "arguments": {
+        "path": "."
+      },
+      "success": true,
+      "summary": ".: 0 entries",
+      "requires_human_approval": false
+    },
+    {
+      "name": "handoff_to_structured",
+      "arguments": {
+        "reason": "Venue ID 'edinburgh_venue_456' is invalid; need to re-resolve venue selection",
+        "context": "Subgoal: Calculate event cost at chosen venue",
+        "data": {
+          "error": "unknown venue",
+          "previous_venue_id": "edinburgh_venue_456"
+        }
+      },
+      "success": true,
+      "summary": "handoff to structured half: Venue ID 'edinburgh_venue_456' is invalid; need to re-resolve venue selection",
+      "requires_human_approval": false
+    }
+  ],
+  "turns_used": 3,
+  "handoff_requested": true,
+  "handoff_payload": {
+    "reason": "Venue ID 'edinburgh_venue_456' is invalid; need to re-resolve venue selection",
+    "context": "Subgoal: Calculate event cost at chosen venue",
+    "data": {
+      "error": "unknown venue",
+      "previous_venue_id": "edinburgh_venue_456"
+    }
+  }
+}

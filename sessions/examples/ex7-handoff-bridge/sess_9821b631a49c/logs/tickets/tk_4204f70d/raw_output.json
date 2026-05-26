@@ -1,0 +1,47 @@
+{
+  "subgoal_id": "sg_1",
+  "success": true,
+  "final_answer": "(handoff requested)",
+  "tool_calls_made": [
+    {
+      "name": "venue_search",
+      "arguments": {
+        "near": "Edinburgh",
+        "party_size": 6
+      },
+      "success": true,
+      "summary": "venue_search('Edinburgh', party=6): 0 result(s)",
+      "requires_human_approval": false
+    },
+    {
+      "name": "handoff_to_structured",
+      "arguments": {
+        "reason": "No venues found for the specified criteria",
+        "context": "Venue search in Edinburgh for 6 people returned zero results",
+        "data": {
+          "search_params": {
+            "near": "Edinburgh",
+            "party_size": 6,
+            "budget_max_gbp": 1000
+          }
+        }
+      },
+      "success": true,
+      "summary": "handoff to structured half: No venues found for the specified criteria",
+      "requires_human_approval": false
+    }
+  ],
+  "turns_used": 2,
+  "handoff_requested": true,
+  "handoff_payload": {
+    "reason": "No venues found for the specified criteria",
+    "context": "Venue search in Edinburgh for 6 people returned zero results",
+    "data": {
+      "search_params": {
+        "near": "Edinburgh",
+        "party_size": 6,
+        "budget_max_gbp": 1000
+      }
+    }
+  }
+}

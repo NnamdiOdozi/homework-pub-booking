@@ -1,0 +1,22 @@
+[
+  {
+    "id": "sg_1",
+    "description": "Search Edinburgh areas for venues with available evening slots for 6 people",
+    "success_criterion": "At least one venue with available slots is found",
+    "estimated_tool_calls": 1,
+    "depends_on": [],
+    "assigned_half": "loop",
+    "status": "pending"
+  },
+  {
+    "id": "sg_2",
+    "description": "Call handoff_to_structured with the selected venue's display name as venue_id",
+    "success_criterion": "Structured half confirms the booking without errors",
+    "estimated_tool_calls": 1,
+    "depends_on": [
+      "sg_1"
+    ],
+    "assigned_half": "structured",
+    "status": "pending"
+  }
+]

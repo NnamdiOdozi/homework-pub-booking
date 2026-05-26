@@ -1,0 +1,21 @@
+{
+  "ticket_id": "tk_4d40feda",
+  "operation": "planner.plan",
+  "started_at": "2026-05-25T13:16:11.108531+00:00",
+  "completed_at": "2026-05-25T13:16:19.360673+00:00",
+  "duration_ms": 8252,
+  "outputs": [
+    {
+      "path": "/home/nodozi/projects/NEBIUS_MAR_2026/AI_Agents/homework-pub-booking/sessions/examples/ex7-handoff-bridge/sess_ad5adfe19a16/logs/tickets/tk_4d40feda/raw_output.json",
+      "sha256": "bf7978384a7f5941d2fd39dfa25d235be2be7ad97e869a1e35838d0a3c410083",
+      "size_bytes": 566,
+      "content_type": "application/json"
+    }
+  ],
+  "metrics": {
+    "num_subgoals": 2,
+    "llm_tokens_in": 501,
+    "llm_tokens_out": 137,
+    "llm_model": "meta-llama/Llama-3.3-70B-Instruct"
+  }
+}

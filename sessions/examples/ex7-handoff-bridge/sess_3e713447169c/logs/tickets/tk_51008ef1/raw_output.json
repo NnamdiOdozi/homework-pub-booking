@@ -1,0 +1,22 @@
+[
+  {
+    "id": "sg_1",
+    "description": "Search for venues near Haymarket for 12 people, adjusting party size if necessary to find a suitable venue.",
+    "success_criterion": "A venue is found with details including display name, available for the date and time.",
+    "estimated_tool_calls": 1,
+    "depends_on": [],
+    "assigned_half": "loop",
+    "status": "pending"
+  },
+  {
+    "id": "sg_2",
+    "description": "Confirm booking details with structured validation for the selected venue.",
+    "success_criterion": "Structured validation confirms the booking meets all policy rules.",
+    "estimated_tool_calls": 1,
+    "depends_on": [
+      "sg_1"
+    ],
+    "assigned_half": "structured",
+    "status": "pending"
+  }
+]

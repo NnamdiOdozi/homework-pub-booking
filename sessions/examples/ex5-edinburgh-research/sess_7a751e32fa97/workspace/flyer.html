@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Event Flyer — Unknown Venue</title>
+<style>
+body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 1rem; border: 2px solid #333; }
+h1 { color: #222; }
+dl { display: grid; grid-template-columns: 1fr 2fr; gap: 0.5rem; }
+dt { font-weight: bold; } dd { margin: 0; }
+.cost { background: #f5f5f5; padding: 1rem; border-radius: 4px; margin-top: 1rem; }
+</style>
+</head>
+<body>
+<h1>Edinburgh Pub Event</h1>
+<h2 data-testid="venue_name">Unknown Venue</h2>
+<dl>
+  <dt>Address</dt><dd data-testid="venue_address"></dd>
+  <dt>Date</dt><dd data-testid="date">2023-10-15</dd>
+  <dt>Time</dt><dd data-testid="time">7:00 PM</dd>
+  <dt>Party size</dt><dd data-testid="party_size"></dd>
+  <dt>Weather</dt>
+  <dd><span data-testid="condition"></span>, <span data-testid="temperature">°C</span></dd>
+</dl>
+<div class="cost">
+  <h3>Cost Breakdown</h3>
+  <dl>
+    <dt>Total</dt><dd data-testid="total">£0</dd>
+    <dt>Deposit required</dt><dd data-testid="deposit">£0</dd>
+  </dl>
+</div>
+</body>
+</html>

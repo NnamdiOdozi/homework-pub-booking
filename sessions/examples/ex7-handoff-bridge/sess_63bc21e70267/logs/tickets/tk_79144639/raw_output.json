@@ -1,0 +1,35 @@
+{
+  "subgoal_id": "sg_1",
+  "success": true,
+  "final_answer": "(handoff requested)",
+  "tool_calls_made": [
+    {
+      "name": "handoff_to_structured",
+      "arguments": {
+        "reason": "Need user input for venue search parameters",
+        "context": "Missing 'near' location and party size required for venue_search",
+        "data": {
+          "missing_fields": [
+            "near",
+            "party_size"
+          ]
+        }
+      },
+      "success": true,
+      "summary": "handoff to structured half: Need user input for venue search parameters",
+      "requires_human_approval": false
+    }
+  ],
+  "turns_used": 1,
+  "handoff_requested": true,
+  "handoff_payload": {
+    "reason": "Need user input for venue search parameters",
+    "context": "Missing 'near' location and party size required for venue_search",
+    "data": {
+      "missing_fields": [
+        "near",
+        "party_size"
+      ]
+    }
+  }
+}

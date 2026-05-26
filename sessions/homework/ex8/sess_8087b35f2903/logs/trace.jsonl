@@ -1,0 +1,4 @@
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:41:33.105379+00:00", "payload": {"text": "Hello . I would like to make a booking for this week .", "turn": 0, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:41:34.606688+00:00", "payload": {"text": "How many in your party?", "turn": 0, "mode": "voice"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:41:36.575775+00:00", "payload": {"text": "For eight people .", "turn": 1, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:41:37.394330+00:00", "payload": {"text": "Aye, we can do that. I'll pencil you in. What's the date and time?", "turn": 1, "mode": "voice"}}

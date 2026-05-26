@@ -1,0 +1,20 @@
+{
+  "ticket_id": "tk_5e86a378",
+  "operation": "executor.run_subgoal/sg_1",
+  "started_at": "2026-05-25T13:15:47.852915+00:00",
+  "completed_at": "2026-05-25T13:16:11.071666+00:00",
+  "duration_ms": 23218,
+  "outputs": [
+    {
+      "path": "/home/nodozi/projects/NEBIUS_MAR_2026/AI_Agents/homework-pub-booking/sessions/examples/ex7-handoff-bridge/sess_ad5adfe19a16/logs/tickets/tk_5e86a378/raw_output.json",
+      "sha256": "9ec7b77a8ca7d1c5d9e7ae2bbb3422fd113167b6e3ae866ad6b309faf4b78869",
+      "size_bytes": 2629,
+      "content_type": "application/json"
+    }
+  ],
+  "metrics": {
+    "tool_calls": 2,
+    "turns_used": 3,
+    "handoff_requested": false
+  }
+}

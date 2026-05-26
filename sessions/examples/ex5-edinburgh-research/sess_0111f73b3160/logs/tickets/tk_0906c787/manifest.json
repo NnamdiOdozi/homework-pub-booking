@@ -1,0 +1,21 @@
+{
+  "ticket_id": "tk_0906c787",
+  "operation": "planner.plan",
+  "started_at": "2026-05-25T21:23:30.910931+00:00",
+  "completed_at": "2026-05-25T21:23:41.683725+00:00",
+  "duration_ms": 10772,
+  "outputs": [
+    {
+      "path": "/home/nodozi/projects/NEBIUS_MAR_2026/AI_Agents/homework-pub-booking/sessions/examples/ex5-edinburgh-research/sess_0111f73b3160/logs/tickets/tk_0906c787/raw_output.json",
+      "sha256": "37fd4f8fc5e27b14178b8a206f3c130461da1993de42f7022adf4e26bcd38f44",
+      "size_bytes": 1513,
+      "content_type": "application/json"
+    }
+  ],
+  "metrics": {
+    "num_subgoals": 5,
+    "llm_tokens_in": 629,
+    "llm_tokens_out": 386,
+    "llm_model": "meta-llama/Llama-3.3-70B-Instruct"
+  }
+}

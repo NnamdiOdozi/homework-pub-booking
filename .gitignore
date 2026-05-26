@@ -8,9 +8,10 @@
 
 # ── Session artifacts ────────────────────────────────────────────────
 # Sessions contain API output and should not be committed.
-sessions/
+# sessions/
 demo_sessions_*/
 *.session.json
+*.zip
 
 # ── Python standard ──────────────────────────────────────────────────
 __pycache__/

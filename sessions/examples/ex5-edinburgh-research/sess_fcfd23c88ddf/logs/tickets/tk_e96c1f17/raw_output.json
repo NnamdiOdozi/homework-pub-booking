@@ -1,0 +1,40 @@
+{
+  "subgoal_id": "sg_3",
+  "success": true,
+  "final_answer": "(handoff requested)",
+  "tool_calls_made": [
+    {
+      "name": "list_files",
+      "arguments": {
+        "path": "."
+      },
+      "success": true,
+      "summary": ".: 0 entries",
+      "requires_human_approval": false
+    },
+    {
+      "name": "handoff_to_structured",
+      "arguments": {
+        "reason": "Missing venue_id required for cost calculation",
+        "context": "Subgoal sg_3: Calculate cost for 6 people at selected venue for 3 hours",
+        "data": {
+          "party_size": 6,
+          "duration_hours": 3
+        }
+      },
+      "success": true,
+      "summary": "handoff to structured half: Missing venue_id required for cost calculation",
+      "requires_human_approval": false
+    }
+  ],
+  "turns_used": 2,
+  "handoff_requested": true,
+  "handoff_payload": {
+    "reason": "Missing venue_id required for cost calculation",
+    "context": "Subgoal sg_3: Calculate cost for 6 people at selected venue for 3 hours",
+    "data": {
+      "party_size": 6,
+      "duration_hours": 3
+    }
+  }
+}

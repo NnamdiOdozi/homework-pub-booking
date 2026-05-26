@@ -1,0 +1,46 @@
+{
+  "session_id": "sess_3e713447169c",
+  "version": 1,
+  "created_at": "2026-05-25T12:11:09.467615+00:00",
+  "updated_at": "2026-05-25T12:14:38.464242+00:00",
+  "scenario": "ex7-handoff-bridge",
+  "state": "failed",
+  "user_id": null,
+  "current_half": "loop",
+  "planner": {
+    "subgoals": [
+      {
+        "id": "sg_1",
+        "description": "Search for venues in Edinburgh areas (Old Town, New Town, Tollcross) with party_size=6 and evening availability",
+        "success_criterion": "At least one venue with available slots and venue_id is returned",
+        "estimated_tool_calls": 1,
+        "depends_on": [],
+        "assigned_half": "loop",
+        "status": "pending"
+      },
+      {
+        "id": "sg_2",
+        "description": "Call handoff_to_structured with the venue_id from the search result and booking details",
+        "success_criterion": "Booking confirmation is successfully processed",
+        "estimated_tool_calls": 1,
+        "depends_on": [
+          "sg_1"
+        ],
+        "assigned_half": "structured",
+        "status": "pending"
+      }
+    ]
+  },
+  "executor": {},
+  "structured": {},
+  "memory": {},
+  "handoff_history": [],
+  "bare_mode": false,
+  "config_overrides": {},
+  "result": {
+    "reason": {
+      "reason": "max_rounds=3 exceeded"
+    }
+  },
+  "resumed_from": null
+}

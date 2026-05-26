@@ -1,0 +1,2 @@
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:42:32.328795+00:00", "payload": {"text": "Hi , I would like to make a booking for six people . For six people for tomorrow . Tuesday at 6 p.m. . Are you available ?", "turn": 0, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:42:33.429255+00:00", "payload": {"text": "Aye, we can do that. I'll pencil you in for Tuesday at 6 p.m. What's the contact number?", "turn": 0, "mode": "voice"}}

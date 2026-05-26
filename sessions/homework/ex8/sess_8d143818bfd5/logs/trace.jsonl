@@ -1,0 +1,2 @@
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:51:58.901541+00:00", "payload": {"text": "Hi . Good evening . My name is Nam Theodosia . I like to make a booking for tomorrow , Tuesday . It's for six people and it's for 6 p.m. . And my deposit is \u00a3200 .", "turn": 0, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:52:00.466241+00:00", "payload": {"text": "Aye, we can do that. I'll pencil you in for Tuesday at 6 p.m. What's the contact number?", "turn": 0, "mode": "voice"}}

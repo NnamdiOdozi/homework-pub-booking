@@ -1,0 +1,21 @@
+{
+  "ticket_id": "tk_64a477d7",
+  "operation": "planner.plan",
+  "started_at": "2026-05-25T12:13:26.885387+00:00",
+  "completed_at": "2026-05-25T12:13:43.062124+00:00",
+  "duration_ms": 16176,
+  "outputs": [
+    {
+      "path": "/home/nodozi/projects/NEBIUS_MAR_2026/AI_Agents/homework-pub-booking/sessions/examples/ex7-handoff-bridge/sess_3e713447169c/logs/tickets/tk_64a477d7/raw_output.json",
+      "sha256": "2fe838bce21733f571d2787ccfb701e46b1dcc375da7d17befb2f8af0271a334",
+      "size_bytes": 704,
+      "content_type": "application/json"
+    }
+  ],
+  "metrics": {
+    "num_subgoals": 2,
+    "llm_tokens_in": 403,
+    "llm_tokens_out": 2729,
+    "llm_model": "Qwen/Qwen3-Next-80B-A3B-Thinking"
+  }
+}

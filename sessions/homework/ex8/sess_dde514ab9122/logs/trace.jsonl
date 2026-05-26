@@ -1,0 +1,6 @@
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:55:21.442467+00:00", "payload": {"text": "Hi . Good evening . My name is Nam de dozy . I would like to make a booking for six people for tomorrow , Tuesday at 6 p.m. and my deposit is \u00a3200 .", "turn": 0, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:55:22.473089+00:00", "payload": {"text": "Aye, we can do that. I'll pencil you in for Tuesday at 6 p.m. What's the contact number?", "turn": 0, "mode": "voice"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:55:39.089263+00:00", "payload": {"text": "Contact number is 077686891 .", "turn": 1, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:55:53.147795+00:00", "payload": {"text": "Got it, 077686891. You're booked for Tuesday at 6 p.m.", "turn": 1, "mode": "voice"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T20:56:11.350052+00:00", "payload": {"text": "Okay , the numbers actually zero , double 768 . Another 6891 .", "turn": 2, "mode": "voice"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T20:56:12.375036+00:00", "payload": {"text": "Aye, 0770 768 6891. Booking confirmed.", "turn": 2, "mode": "voice"}}

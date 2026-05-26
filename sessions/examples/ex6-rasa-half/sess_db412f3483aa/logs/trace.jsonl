@@ -1,0 +1,2 @@
+{"event_type": "session.state_changed", "actor": "rasa", "timestamp": "2026-05-25T11:10:10.866198+00:00", "payload": {"from": "planning", "to": "executing"}}
+{"event_type": "session.state_changed", "actor": "rasa", "timestamp": "2026-05-25T11:10:11.711146+00:00", "payload": {"from": "executing", "to": "completed", "booking_reference": "BK-7D401E9E"}}

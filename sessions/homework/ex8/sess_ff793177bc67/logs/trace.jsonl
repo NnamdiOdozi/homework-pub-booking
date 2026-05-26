@@ -1,0 +1,10 @@
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T19:17:08.703197+00:00", "payload": {"text": "hello good evening.", "turn": 0, "mode": "text"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T19:17:09.459215+00:00", "payload": {"text": "Evening. What can I do for ye?", "turn": 0, "mode": "text"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T19:17:54.552487+00:00", "payload": {"text": "i would like to book  a table in a pub for 6 people for tueseday 26 May at 1pm", "turn": 1, "mode": "text"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T19:17:55.832981+00:00", "payload": {"text": "Aye, we can do that. I'll pencil you in for 26 May at 1pm. What's the contact number?", "turn": 1, "mode": "text"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T19:18:22.598576+00:00", "payload": {"text": "it's 07713 454 6978", "turn": 2, "mode": "text"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T19:18:25.696420+00:00", "payload": {"text": "Got it, 07713 454 6978. See ye on the 26th.", "turn": 2, "mode": "text"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T19:18:43.519100+00:00", "payload": {"text": "great", "turn": 3, "mode": "text"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T19:18:43.969892+00:00", "payload": {"text": "All set then.", "turn": 3, "mode": "text"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T19:19:01.984993+00:00", "payload": {"text": "ok cheerio", "turn": 4, "mode": "text"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T19:19:02.659835+00:00", "payload": {"text": "Cheerio.", "turn": 4, "mode": "text"}}

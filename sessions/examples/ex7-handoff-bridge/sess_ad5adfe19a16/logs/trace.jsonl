@@ -1,0 +1,16 @@
+{"event_type": "bridge.round_start", "actor": "bridge", "payload": {"round": 1, "half": "loop"}}
+{"event_type": "planner.called", "actor": "default", "timestamp": "2026-05-25T13:15:24.158423+00:00", "payload": {"task_preview": "Book an Edinburgh pub for 12 people, Friday 25 April 2026 at 19:30.\n\nSTEP 1 \u2014 find a venue:\n  Call venue_search(near='Haymarket', party_size=12, budget_max_gbp=2000).\n  If count is 0, immediately call"}}
+{"event_type": "planner.produced_subgoals", "actor": "default", "timestamp": "2026-05-25T13:15:47.833817+00:00", "payload": {"num_subgoals": 2}}
+{"event_type": "executor.tool_called", "actor": "default", "ticket_id": null, "timestamp": "2026-05-25T13:15:54.118520+00:00", "payload": {"tool": "venue_search", "arguments": {"near": "Haymarket", "party_size": 12}, "success": true, "summary": "venue_search('Haymarket', party=12): 0 result(s)"}}
+{"event_type": "executor.tool_called", "actor": "default", "ticket_id": null, "timestamp": "2026-05-25T13:15:58.765469+00:00", "payload": {"tool": "venue_search", "arguments": {"near": "Haymarket", "party_size": 12, "budget_max_gbp": 1500}, "success": true, "summary": "venue_search('Haymarket', party=12): 0 result(s)"}}
+{"event_type": "session.state_changed", "actor": "bridge", "payload": {"from": "loop", "to": "structured", "round": 1}}
+{"event_type": "session.state_changed", "actor": "rasa", "timestamp": "2026-05-25T13:16:11.092130+00:00", "payload": {"from": "executing", "to": "executing"}}
+{"event_type": "session.state_changed", "actor": "bridge", "payload": {"from": "structured", "to": "loop", "round": 1, "rejection_reason": "normalisation failed: missing venue_id"}}
+{"event_type": "bridge.round_start", "actor": "bridge", "payload": {"round": 2, "half": "loop"}}
+{"event_type": "planner.called", "actor": "default", "timestamp": "2026-05-25T13:16:11.097061+00:00", "payload": {"task_preview": "Booking rejected: normalisation failed: missing venue_id\n\nThe booking policy allows maximum 8 people. Find an alternative:\n\nSTEP 1 \u2014 search a different area:\n  Call venue_search(near='Old Town', party"}}
+{"event_type": "planner.produced_subgoals", "actor": "default", "timestamp": "2026-05-25T13:16:19.381895+00:00", "payload": {"num_subgoals": 2}}
+{"event_type": "executor.tool_called", "actor": "default", "ticket_id": null, "timestamp": "2026-05-25T13:16:35.428409+00:00", "payload": {"tool": "venue_search", "arguments": {"near": "Old Town", "party_size": 4}, "success": true, "summary": "venue_search('Old Town', party=4): 1 result(s)"}}
+{"event_type": "session.state_changed", "actor": "bridge", "payload": {"from": "loop", "to": "structured", "round": 2}}
+{"event_type": "session.state_changed", "actor": "rasa", "timestamp": "2026-05-25T13:16:45.108638+00:00", "payload": {"from": "executing", "to": "executing"}}
+{"event_type": "session.state_changed", "actor": "rasa", "timestamp": "2026-05-25T13:16:46.753783+00:00", "payload": {"from": "executing", "to": "completed", "booking_reference": "BK-4B5F7858"}}
+{"event_type": "session.state_changed", "actor": "bridge", "payload": {"from": "structured", "to": "complete", "round": 2}}

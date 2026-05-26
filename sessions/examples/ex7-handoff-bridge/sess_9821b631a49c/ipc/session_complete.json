@@ -1,0 +1,12 @@
+{
+  "session_id": "sess_9821b631a49c",
+  "result": {
+    "venue": {
+      "id": "haymarket_tap",
+      "name": "Haymarket Tap",
+      "address": "12 Dalry Rd, Edinburgh EH11 2BG",
+      "seats_available_evening": 8,
+      "min_spend_gbp": 200
+    }
+  }
+}

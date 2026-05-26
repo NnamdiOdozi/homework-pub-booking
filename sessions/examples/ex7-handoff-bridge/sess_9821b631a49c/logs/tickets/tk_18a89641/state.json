@@ -1,0 +1,9 @@
+{
+  "ticket_id": "tk_18a89641",
+  "operation": "planner.plan",
+  "state": "success",
+  "started_at": "2026-05-25T12:24:52.902225+00:00",
+  "completed_at": "2026-05-25T12:25:21.803983+00:00",
+  "error_code": null,
+  "error_message": null
+}

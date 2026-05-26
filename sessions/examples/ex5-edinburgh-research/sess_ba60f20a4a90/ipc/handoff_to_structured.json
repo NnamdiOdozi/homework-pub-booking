@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "from_half": "loop",
+  "to_half": "structured",
+  "written_at": "2026-05-25T21:11:01.812596+00:00",
+  "session_id": "sess_ba60f20a4a90",
+  "reason": "Venue ID 'edinburgh_venue_456' is invalid; need to re-resolve venue selection",
+  "context": "Subgoal: Calculate event cost at chosen venue",
+  "data": {
+    "error": "unknown venue",
+    "previous_venue_id": "edinburgh_venue_456"
+  },
+  "return_instructions": ""
+}

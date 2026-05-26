@@ -1,0 +1,4 @@
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T19:19:45.223378+00:00", "payload": {"text": "hi, good evening. I like to book for 10 people on Wednesday at 6 p.m.", "turn": 0, "mode": "text"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T19:19:46.943421+00:00", "payload": {"text": "Sorry, too many. We cannae take parties ower 8. Try The Royal Oak or Bennet's Bar, they might be able tae accommodate ye.", "turn": 0, "mode": "text"}}
+{"event_type": "voice.utterance_in", "actor": "user", "timestamp": "2026-05-25T19:20:01.200514+00:00", "payload": {"text": "Okay, that's a shame. I'll try one of these places. Goodbye!", "turn": 1, "mode": "text"}}
+{"event_type": "voice.utterance_out", "actor": "manager", "timestamp": "2026-05-25T19:20:07.800372+00:00", "payload": {"text": "Cheerio, good luck findin' a spot.", "turn": 1, "mode": "text"}}
